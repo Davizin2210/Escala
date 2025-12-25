@@ -213,7 +213,7 @@ function render(){
         ${!mostrandoLixeira?`
           <span class="edit" onclick="event.stopPropagation();editar(${i})">Editar</span>
           <span class="delete" onclick="event.stopPropagation();excluir(${i})">Excluir</span>
-        :
+        `:`
           <span class="restore" onclick="event.stopPropagation();restaurar(${i})">Restaurar</span>
         `}
       </div>
@@ -298,7 +298,7 @@ function toggle(i){
     selecionados=selecionados.filter(x=>x!==i);
   else if(selecionados.length<5)
     selecionados.push(i);
-  btnPrint.innerText=SALVAR IMAGEM (${selecionados.length}/5);
+  btnPrint.innerText=`SALVAR IMAGEM (${selecionados.length}/5)`;
   render();
 }
 
@@ -337,7 +337,7 @@ async function gerarImagem(){
     backgroundColor:'#ffffff'
   }).then(canvas=>{
     const link = document.createElement('a');
-    link.download = escala-${selecionados.length}-cards.png;
+    link.download = `escala-${selecionados.length}-cards.png`;
     link.href = canvas.toDataURL('image/png');
     link.click();
   });
