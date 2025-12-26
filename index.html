@@ -1,449 +1,459 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Escala de Louvor</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escala de Louvor - Glass Edition</title>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --glass: rgba(255, 255, 255, 0.15);
+            --glass-heavy: rgba(255, 255, 255, 0.25);
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --primary: #22c55e;
+            --accent: #60a5fa;
+            --danger: #ef4444;
+            --text: #ffffff;
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        }
 
-<style>
-:root {
-  --bg: #e2e8f0;
-  --glass: rgba(255, 255, 255, 0.4);
-  --glass-border: rgba(255, 255, 255, 0.6);
-  --primary: rgba(34, 197, 94, 0.7);
-  --danger: rgba(239, 68, 68, 0.7);
-  --text: #1e293b;
-  --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-}
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, sans-serif;
+        }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  -webkit-tap-highlight-color: transparent;
-}
+        body {
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text);
+            min-height: 100vh;
+            padding-bottom: 100px;
+        }
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
-  background: linear-gradient(135deg, #cfd9df 0%, #e2ebf0 100%);
-  background-attachment: fixed;
-  color: var(--text);
-  min-height: 100vh;
-}
+        #app {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+        }
 
-#app {
-  max-width: 520px;
-  margin: auto;
-  padding: 24px;
-}
+        header {
+            text-align: center;
+            padding: 40px 0;
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
 
-header {
-  text-align: center;
-  font-size: 28px;
-  font-weight: 800;
-  margin-bottom: 30px;
-  letter-spacing: -0.5px;
-}
+        /* Botões Estilizados */
+        .nav-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
 
-button {
-  width: 100%;
-  padding: 16px;
-  border: 1px solid var(--glass-border);
-  border-radius: 18px;
-  font-weight: 600;
-  cursor: pointer;
-  margin-bottom: 12px;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: var(--shadow);
-  color: var(--text);
-  font-size: 15px;
-}
+        button {
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 12px;
+            color: white;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
 
-button:active {
-  transform: scale(0.96);
-  background: rgba(255, 255, 255, 0.2);
-}
+        .btn-main { background: var(--glass); }
+        .btn-main:hover { background: var(--glass-heavy); }
+        .btn-primary { background: var(--primary); border: none; }
+        .btn-danger { background: rgba(239, 68, 68, 0.3); }
 
-.btn-primary {
-  background: var(--primary);
-  color: white;
-  border-color: rgba(255, 255, 255, 0.3);
-}
+        /* Cards de Escala */
+        .card {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 15px;
+            position: relative;
+            transition: transform 0.3s, border-color 0.3s;
+            cursor: pointer;
+        }
 
-.btn-secondary {
-  background: var(--glass);
-}
+        .card.selected {
+            border: 2px solid var(--primary);
+            background: rgba(34, 197, 94, 0.1);
+            transform: translateY(-5px);
+        }
 
-.btn-danger {
-  background: var(--danger);
-  color: white;
-}
+        .card h4 {
+            font-size: 20px;
+            margin-bottom: 12px;
+            color: var(--primary);
+            text-transform: uppercase;
+        }
 
-.card {
-  background: var(--glass);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--glass-border);
-  border-radius: 24px;
-  padding: 18px;
-  margin-bottom: 16px;
-  box-shadow: var(--shadow);
-  transition: transform 0.2s;
-}
+        .info-row {
+            font-size: 14px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0.9;
+        }
 
-.card.selected {
-  border: 3px solid #22c55e;
-  transform: scale(1.02);
-}
+        .info-row i { width: 16px; opacity: 0.7; }
 
-.card h4 {
-  color: #065f46;
-  font-size: 18px;
-  margin-bottom: 10px;
-}
+        /* Ações flutuantes no Card */
+        .card-actions {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 10px;
+        }
 
-.info {
-  font-size: 13px;
-  margin-bottom: 5px;
-  opacity: 0.9;
-}
+        .card-actions i {
+            padding: 8px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+            transition: 0.2s;
+        }
 
-.actions {
-  display: flex;
-  gap: 15px;
-  margin-top: 12px;
-  border-top: 1px solid rgba(0,0,0,0.05);
-  padding-top: 12px;
-}
+        .card-actions .fa-pen:hover { color: var(--accent); }
+        .card-actions .fa-trash:hover { color: var(--danger); }
 
-.actions span {
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  cursor: pointer;
-}
+        /* Formulário Modal */
+        #form {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(20px);
+            padding: 30px;
+            display: none;
+            overflow-y: auto;
+            z-index: 2000;
+        }
 
-.edit { color: #0369a1; }
-.delete { color: #b91c1c; }
-.restore { color: #15803d; }
+        input {
+            width: 100%;
+            padding: 14px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            color: white;
+            margin-bottom: 10px;
+            outline: none;
+        }
 
-#btnPrint {
-  position: fixed;
-  bottom: 25px;
-  left: 5%;
-  width: 90%;
-  display: none;
-  z-index: 100;
-  background: rgba(34, 197, 94, 0.9);
-  border-radius: 20px;
-}
+        /* Container da Imagem Final (Estilo Grid Compacto) */
+        #printArea {
+            position: fixed;
+            left: -5000px;
+            background: #fff; /* Fundo branco para a imagem final */
+            display: flex;
+            flex-wrap: wrap;
+        }
 
-#form {
-  position: fixed;
-  inset: 0;
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
-  padding: 24px;
-  display: none;
-  overflow: auto;
-  z-index: 1000;
-}
+        .print-card {
+            width: 300px;
+            padding: 20px;
+            border: 1px solid #eee;
+            color: #333;
+            background: #fff;
+            /* Bordas removidas conforme solicitado para a imagem final */
+            border-radius: 0 !important;
+        }
+        
+        .print-card h4 { color: #166534; border-bottom: 2px solid #166534; margin-bottom: 10px; }
 
-input {
-  width: 100%;
-  padding: 14px;
-  border-radius: 14px;
-  border: 1px solid var(--glass-border);
-  margin-bottom: 10px;
-  background: rgba(255, 255, 255, 0.5);
-  font-size: 16px;
-  outline: none;
-}
-
-input:focus {
-  border-color: #22c55e;
-  background: white;
-}
-
-.row {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-#printArea {
-  position: absolute;
-  left: -9999px;
-  top: 0;
-  display: grid;
-  grid-template-columns: repeat(5, 220px);
-  gap: 12px;
-  padding: 20px;
-  background: #fff;
-}
-
-#printArea .card {
-  width: 220px;
-  font-size: 11px;
-  background: white;
-  border: 1px solid #ddd;
-  backdrop-filter: none;
-}
-</style>
+        #floating-print-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 400px;
+            z-index: 3000;
+            display: none;
+            padding: 20px;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+    </style>
 </head>
-
 <body>
 
 <div id="app">
-  <header>🎶 Escala de Louvor</header>
+    <header>LOUVOR</header>
 
-  <button class="btn-primary" onclick="abrirForm()">➕ Nova Escala</button>
-  <button class="btn-secondary" onclick="ativarSelecao()">🖼️ Gerar Imagem</button>
-  <button class="btn-danger" onclick="alternarLixeira()">🗑️ Lixeira</button>
+    <div class="nav-actions">
+        <button class="btn-main" onclick="abrirForm()"><i class="fa-solid fa-plus"></i>NOVO</button>
+        <button class="btn-main" onclick="ativarSelecao()"><i class="fa-solid fa-image"></i>IMAGEM</button>
+        <button class="btn-main btn-danger" onclick="alternarLixeira()"><i class="fa-solid fa-trash-can"></i>LIXEIRA</button>
+    </div>
 
-  <h3 id="status" style="margin: 20px 0 10px 5px; font-size: 14px; opacity: 0.6;">Escalas Salvas</h3>
-  <div id="lista"></div>
+    <h3 id="status" style="margin-bottom:15px; font-weight: 400; font-size: 14px; color: var(--accent);">
+        <i class="fa-solid fa-layer-group"></i> ESCALAS ATIVAS
+    </h3>
+    <div id="lista"></div>
 </div>
 
-<button id="btnPrint" class="btn-primary" onclick="gerarImagem()">SALVAR IMAGEM (0/10)</button>
+<button id="floating-print-btn" class="btn-primary" onclick="gerarImagem()">
+    GERAR IMAGEM AGORA (<span id="count">0</span>/10)
+</button>
 
 <div id="form">
-  <h2 style="margin-bottom: 20px; letter-spacing: -1px;">Criar / Editar Escala</h2>
-
-  <div class="row">
-    <button class="btn-secondary" onclick="definirDia('TERÇA')">TERÇA</button>
-    <button class="btn-secondary" onclick="definirDia('DOMINGO')">DOMINGO</button>
-  </div>
-
-  <div id="equipes" style="display:none; margin-bottom: 15px;">
-    <p style="font-size: 12px; margin-bottom: 8px; font-weight: bold;">Sugestão de Equipes:</p>
-    <div class="row">
-        <button class="btn-primary" onclick="preencherEquipe('A')">Equipe A</button>
-        <button class="btn-primary" onclick="preencherEquipe('B')">Equipe B</button>
+    <h2 style="margin-bottom: 25px;">Configurar Escala</h2>
+    
+    <div style="display: flex; gap:10px; margin-bottom: 20px;">
+        <button class="btn-main" style="flex:1" onclick="definirDia('DOMINGO')">DOMINGO</button>
+        <button class="btn-main" style="flex:1" onclick="definirDia('TERÇA')">TERÇA</button>
     </div>
-  </div>
 
-  <input id="dia" placeholder="Dia selecionado" readonly>
-  <input id="ministro" placeholder="Nome do Ministro">
+    <div id="equipes" style="display:none; margin-bottom: 20px; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px;">
+        <p style="font-size: 12px; margin-bottom: 10px;">Sugestão de Equipe:</p>
+        <div style="display: flex; gap:10px;">
+            <button class="btn-main" style="flex:1; background: var(--primary);" onclick="preencherEquipe('A')">EQUIPE A</button>
+            <button class="btn-main" style="flex:1; background: var(--primary);" onclick="preencherEquipe('B')">EQUIPE B</button>
+        </div>
+    </div>
 
-  <div id="vocais"></div>
+    <input id="dia" placeholder="Dia da Semana" readonly>
+    <input id="ministro" placeholder="Nome do Ministro">
 
-  <input id="guitarra" placeholder="Guitarra">
-  <input id="violao" placeholder="Violão">
-  <input id="baixo" placeholder="Baixo">
-  <input id="teclado" placeholder="Teclado">
-  <input id="bateria" placeholder="Bateria">
+    <div id="vocais"></div>
 
-  <div style="margin-top: 20px;">
-    <button class="btn-primary" onclick="salvarEscala()">Salvar Alterações</button>
-    <button class="btn-secondary" onclick="fecharForm()">Voltar</button>
-  </div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <input id="guitarra" placeholder="Guitarra">
+        <input id="violao" placeholder="Violão">
+        <input id="baixo" placeholder="Baixo">
+        <input id="teclado" placeholder="Teclado">
+        <input id="bateria" placeholder="Bateria" style="grid-column: span 2;">
+    </div>
+
+    <div style="margin-top: 30px; display: flex; gap: 10px;">
+        <button class="btn-primary" style="flex: 2; flex-direction: row; height: 50px;" onclick="salvarEscala()">SALVAR</button>
+        <button class="btn-main" style="flex: 1; flex-direction: row; height: 50px;" onclick="fecharForm()">CANCELAR</button>
+    </div>
 </div>
 
 <div id="printArea"></div>
 
 <script>
-const lista = document.getElementById('lista');
-const statusText = document.getElementById('status');
-const btnPrint = document.getElementById('btnPrint');
-const printArea = document.getElementById('printArea');
-const vocaisDiv = document.getElementById('vocais');
-const equipesDiv = document.getElementById('equipes');
+    let escalas = JSON.parse(localStorage.getItem('escalas')) || [];
+    let lixeira = JSON.parse(localStorage.getItem('lixeira')) || [];
+    let selecionados = [];
+    let modoSelecao = false;
+    let editIndex = null;
+    let mostrandoLixeira = false;
 
-let escalas = JSON.parse(localStorage.getItem('escalas')) || [];
-let lixeira = JSON.parse(localStorage.getItem('lixeira')) || [];
-let selecionados = [];
-let modoSelecao = false;
-let editIndex = null;
-let mostrandoLixeira = false;
+    function salvarStorage(){
+        localStorage.setItem('escalas', JSON.stringify(escalas));
+        localStorage.setItem('lixeira', JSON.stringify(lixeira));
+    }
 
-function salvarStorage(){
-  localStorage.setItem('escalas',JSON.stringify(escalas));
-  localStorage.setItem('lixeira',JSON.stringify(lixeira));
-}
+    function abrirForm(){
+        document.getElementById('form').style.display = 'block';
+    }
 
-function abrirForm(){
-  document.getElementById('form').style.display='block';
-}
+    function fecharForm(){
+        document.getElementById('form').style.display = 'none';
+        editIndex = null;
+        limparCampos();
+    }
 
-function fecharForm(){
-  document.getElementById('form').style.display='none';
-  editIndex=null;
-}
+    function limparCampos() {
+        ['dia', 'ministro', 'guitarra', 'violao', 'baixo', 'teclado', 'bateria'].forEach(id => document.getElementById(id).value = '');
+        document.getElementById('vocais').innerHTML = '';
+        document.getElementById('equipes').style.display = 'none';
+    }
 
-function definirDia(diaEscolhido){
-  document.getElementById('dia').value=diaEscolhido;
-  vocaisDiv.innerHTML='';
-  equipesDiv.style.display = diaEscolhido==='TERÇA' ? 'block' : 'none';
+    function definirDia(diaEscolhido){
+        document.getElementById('dia').value = diaEscolhido;
+        const vocaisDiv = document.getElementById('vocais');
+        vocaisDiv.innerHTML = '';
+        document.getElementById('equipes').style.display = diaEscolhido === 'TERÇA' ? 'block' : 'none';
 
-  for(let i=1;i<=7;i++){
-    vocaisDiv.innerHTML += `<input id="v${i}" placeholder="Vocal ${i}">`;
-  }
-}
-
-function preencherEquipe(tipo){
-  const equipeA=['Ellen','Fernanda','Nilza','Oscar','Raquel','Sabrina','Samuel'];
-  const equipeB=['Alessandro','Alexandre','Aléxia','Ana','Cláudia','Idelma','Rosane'];
-  const dados = tipo==='A'?equipeA:equipeB;
-
-  dados.forEach((nome,i)=>{
-    const campo = document.getElementById(`v${i+1}`);
-    if(campo) campo.value = nome;
-  });
-}
-
-function salvarEscala(){
-  const vocais = [];
-  for(let i=1;i<=7;i++){
-    const campo = document.getElementById(`v${i}`);
-    vocais.push(campo ? campo.value : '');
-  }
-
-  const escala = {
-    dia: document.getElementById('dia').value || '',
-    ministro: ministro.value || '',
-    vocais: vocais,
-    guitarra: guitarra.value || '',
-    violao: violao.value || '',
-    baixo: baixo.value || '',
-    teclado: teclado.value || '',
-    bateria: bateria.value || ''
-  };
-
-  if(editIndex !== null){
-    escalas[editIndex] = escala;
-  } else {
-    escalas.push(escala);
-  }
-
-  salvarStorage();
-  fecharForm();
-  render();
-}
-
-function render(){
-  lista.innerHTML='';
-  statusText.innerText = mostrandoLixeira ? 'Lixeira' : 'Escalas Salvas';
-  const dados = mostrandoLixeira ? lixeira : escalas;
-
-  dados.forEach((e,i)=>{
-    const card=document.createElement('div');
-    card.className='card'+(selecionados.includes(i)?' selected':'');
-    card.onclick=()=>toggleSelecao(i);
-
-    card.innerHTML=`
-      <h4>${e.dia}</h4>
-      <div class="info"><strong>Ministro:</strong> ${e.ministro}</div>
-      ${(e.vocais || []).filter(v => v !== '').map((v,idx)=>`
-        <div class="info">Vocal: ${v}</div>
-      `).join('')}
-      <div class="info">Guit: ${e.guitarra} | Violão: ${e.violao}</div>
-      <div class="info">Baixo: ${e.baixo} | Tecl: ${e.teclado} | Bat: ${e.bateria}</div>
-      <div class="actions">
-        ${!mostrandoLixeira
-          ? `<span class="edit" onclick="event.stopPropagation();editarEscala(${i})">Editar</span>
-             <span class="delete" onclick="event.stopPropagation();excluirEscala(${i})">Excluir</span>`
-          : `<span class="restore" onclick="event.stopPropagation();restaurarEscala(${i})">Restaurar</span>`
+        for(let i=1; i<=6; i++){
+            vocaisDiv.innerHTML += `<input id="v${i}" placeholder="Vocal ${i}">`;
         }
-      </div>
-    `;
-    lista.appendChild(card);
-  });
-}
+    }
 
-function editarEscala(i){
-  const e = escalas[i];
-  editIndex=i;
-  abrirForm();
-  definirDia(e.dia);
+    function preencherEquipe(tipo){
+        const eqA = ['Ellen','Fernanda','Nilza','Oscar','Raquel','Sabrina'];
+        const eqB = ['Alessandro','Alexandre','Aléxia','Ana','Cláudia','Idelma'];
+        const dados = tipo === 'A' ? eqA : eqB;
+        dados.forEach((nome, i) => {
+            const campo = document.getElementById(`v${i+1}`);
+            if(campo) campo.value = nome;
+        });
+    }
 
-  ministro.value=e.ministro;
-  guitarra.value=e.guitarra;
-  violao.value=e.violao;
-  baixo.value=e.baixo;
-  teclado.value=e.teclado;
-  bateria.value=e.bateria;
+    function salvarEscala(){
+        const vocais = [];
+        for(let i=1; i<=6; i++){
+            const v = document.getElementById(`v${i}`);
+            if(v && v.value) vocais.push(v.value);
+        }
 
-  e.vocais.forEach((v,idx)=>{
-    const campo=document.getElementById(`v${idx+1}`);
-    if(campo) campo.value=v;
-  });
-}
+        const escala = {
+            dia: document.getElementById('dia').value,
+            ministro: document.getElementById('ministro').value,
+            vocais: vocais,
+            guitarra: document.getElementById('guitarra').value,
+            violao: document.getElementById('violao').value,
+            baixo: document.getElementById('baixo').value,
+            teclado: document.getElementById('teclado').value,
+            bateria: document.getElementById('bateria').value
+        };
 
-function excluirEscala(i){
-  lixeira.push(escalas[i]);
-  escalas.splice(i,1);
-  salvarStorage();
-  render();
-}
+        if(editIndex !== null) escalas[editIndex] = escala;
+        else escalas.push(escala);
 
-function restaurarEscala(i){
-  escalas.push(lixeira[i]);
-  lixeira.splice(i,1);
-  salvarStorage();
-  render();
-}
+        salvarStorage();
+        fecharForm();
+        render();
+    }
 
-function alternarLixeira(){
-  mostrandoLixeira=!mostrandoLixeira;
-  render();
-}
+    function render(){
+        const lista = document.getElementById('lista');
+        const statusText = document.getElementById('status');
+        lista.innerHTML = '';
+        statusText.innerHTML = mostrandoLixeira ? '<i class="fa-solid fa-trash-can"></i> LIXEIRA' : '<i class="fa-solid fa-layer-group"></i> ESCALAS ATIVAS';
+        
+        const dados = mostrandoLixeira ? lixeira : escalas;
 
-function ativarSelecao(){
-  modoSelecao=true;
-  selecionados=[];
-  btnPrint.style.display='block';
-  btnPrint.innerText='SALVAR IMAGEM (0/10)';
-}
+        dados.forEach((e, i) => {
+            const card = document.createElement('div');
+            card.className = `card ${selecionados.includes(i) ? 'selected' : ''}`;
+            card.onclick = () => toggleSelecao(i);
 
-function toggleSelecao(i){
-  if(!modoSelecao) return;
-  if(selecionados.includes(i)){
-    selecionados=selecionados.filter(x=>x!==i);
-  }else if(selecionados.length<10){
-    selecionados.push(i);
-  }
-  btnPrint.innerText=`SALVAR IMAGEM (${selecionados.length}/10)`;
-  render();
-}
+            card.innerHTML = `
+                <div class="card-actions">
+                    ${!mostrandoLixeira ? `
+                        <i class="fa-solid fa-pen" onclick="event.stopPropagation(); editarEscala(${i})"></i>
+                        <i class="fa-solid fa-trash" onclick="event.stopPropagation(); excluirEscala(${i})"></i>
+                    ` : `
+                        <i class="fa-solid fa-rotate-left" onclick="event.stopPropagation(); restaurarEscala(${i})"></i>
+                    `}
+                </div>
+                <h4>${e.dia}</h4>
+                <div class="info-row"><i class="fa-solid fa-microphone-lines"></i> <b>${e.ministro}</b></div>
+                <div class="info-row"><i class="fa-solid fa-users"></i> ${e.vocais.join(', ')}</div>
+                <div class="info-row"><i class="fa-solid fa-guitar"></i> ${e.guitarra} / ${e.violao}</div>
+                <div class="info-row"><i class="fa-solid fa-drum"></i> ${e.baixo} • ${e.teclado} • ${e.bateria}</div>
+            `;
+            lista.appendChild(card);
+        });
+    }
 
-async function gerarImagem(){
-  if(selecionados.length===0){
-    alert('Selecione ao menos uma escala');
-    return;
-  }
+    function editarEscala(i){
+        const e = escalas[i];
+        editIndex = i;
+        abrirForm();
+        definirDia(e.dia);
+        document.getElementById('ministro').value = e.ministro;
+        document.getElementById('guitarra').value = e.guitarra;
+        document.getElementById('violao').value = e.violao;
+        document.getElementById('baixo').value = e.baixo;
+        document.getElementById('teclado').value = e.teclado;
+        document.getElementById('bateria').value = e.bateria;
+        e.vocais.forEach((v, idx) => {
+            if(document.getElementById(`v${idx+1}`)) document.getElementById(`v${idx+1}`).value = v;
+        });
+    }
 
-  printArea.innerHTML='';
-  selecionados.forEach(i=>{
-    const clone=document.querySelectorAll('.card')[i].cloneNode(true);
-    clone.classList.remove('selected');
-    printArea.appendChild(clone);
-  });
+    function excluirEscala(i){
+        lixeira.push(escalas[i]);
+        escalas.splice(i, 1);
+        salvarStorage();
+        render();
+    }
 
-  const colunas = Math.min(selecionados.length, 5);
-  printArea.style.width = (colunas * 232) + 'px';
+    function restaurarEscala(i){
+        escalas.push(lixeira[i]);
+        lixeira.splice(i, 1);
+        salvarStorage();
+        render();
+    }
 
-  await new Promise(r=>setTimeout(r,500));
+    function alternarLixeira(){
+        mostrandoLixeira = !mostrandoLixeira;
+        render();
+    }
 
-  html2canvas(printArea,{scale:2}).then(canvas=>{
-    const a=document.createElement('a');
-    a.href=canvas.toDataURL('image/png');
-    a.download='escala-louvor.png';
-    a.click();
-  });
+    function ativarSelecao(){
+        modoSelecao = !modoSelecao;
+        selecionados = [];
+        document.getElementById('floating-print-btn').style.display = modoSelecao ? 'block' : 'none';
+        render();
+    }
 
-  modoSelecao=false;
-  selecionados=[];
-  btnPrint.style.display='none';
-  render();
-}
+    function toggleSelecao(i){
+        if(!modoSelecao) return;
+        const idx = selecionados.indexOf(i);
+        if(idx > -1) selecionados.splice(idx, 1);
+        else if(selecionados.length < 10) selecionados.push(i);
+        
+        document.getElementById('count').innerText = selecionados.length;
+        render();
+    }
 
-render();
+    async function gerarImagem(){
+        if(selecionados.length === 0) return alert('Selecione escalas!');
+        
+        const printArea = document.getElementById('printArea');
+        printArea.innerHTML = '';
+
+        // Definindo layout de colunas baseado na quantidade
+        const cols = selecionados.length > 3 ? 2 : 1;
+        printArea.style.display = 'grid';
+        printArea.style.gridTemplateColumns = `repeat(${cols}, 300px)`;
+
+        selecionados.sort().forEach(idx => {
+            const e = escalas[idx];
+            const div = document.createElement('div');
+            div.className = 'print-card';
+            div.innerHTML = `
+                <h4>${e.dia}</h4>
+                <p><b>Ministro:</b> ${e.ministro}</p>
+                <p><b>Vocais:</b> ${e.vocais.join(', ')}</p>
+                <p><b>Banda:</b> ${e.guitarra}, ${e.violao}, ${e.baixo}, ${e.teclado}, ${e.bateria}</p>
+            `;
+            printArea.appendChild(div);
+        });
+
+        setTimeout(() => {
+            html2canvas(printArea, { scale: 3 }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `escala_louvor_${new Date().getTime()}.png`;
+                link.href = canvas.toDataURL();
+                link.click();
+                
+                // Reset
+                modoSelecao = false;
+                selecionados = [];
+                document.getElementById('floating-print-btn').style.display = 'none';
+                render();
+            });
+        }, 500);
+    }
+
+    render();
 </script>
 
 </body>
