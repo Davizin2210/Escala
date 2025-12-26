@@ -19,12 +19,7 @@
             --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', -apple-system, sans-serif;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
 
         body {
             background: var(--bg-gradient);
@@ -34,11 +29,7 @@
             padding-bottom: 100px;
         }
 
-        #app {
-            max-width: 600px;
-            margin: auto;
-            padding: 20px;
-        }
+        #app { max-width: 600px; margin: auto; padding: 20px; }
 
         header {
             text-align: center;
@@ -49,7 +40,6 @@
             text-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
 
-        /* Botões Estilizados */
         .nav-actions {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
@@ -64,7 +54,6 @@
             color: white;
             cursor: pointer;
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
             transition: all 0.3s ease;
             font-size: 13px;
             font-weight: 600;
@@ -75,22 +64,18 @@
         }
 
         .btn-main { background: var(--glass); }
-        .btn-main:hover { background: var(--glass-heavy); }
         .btn-primary { background: var(--primary); border: none; }
         .btn-danger { background: rgba(239, 68, 68, 0.3); }
 
-        /* Cards de Escala */
         .card {
             background: var(--glass);
             backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
             border: 1px solid var(--glass-border);
             border-radius: 20px;
             padding: 20px;
             margin-bottom: 15px;
             position: relative;
-            transition: transform 0.3s, border-color 0.3s;
-            cursor: pointer;
+            transition: 0.3s;
         }
 
         .card.selected {
@@ -99,12 +84,7 @@
             transform: translateY(-5px);
         }
 
-        .card h4 {
-            font-size: 20px;
-            margin-bottom: 12px;
-            color: var(--primary);
-            text-transform: uppercase;
-        }
+        .card h4 { font-size: 20px; margin-bottom: 12px; color: var(--primary); }
 
         .info-row {
             font-size: 14px;
@@ -112,12 +92,8 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            opacity: 0.9;
         }
 
-        .info-row i { width: 16px; opacity: 0.7; }
-
-        /* Ações flutuantes no Card */
         .card-actions {
             position: absolute;
             top: 15px;
@@ -126,21 +102,10 @@
             gap: 10px;
         }
 
-        .card-actions i {
-            padding: 8px;
-            border-radius: 8px;
-            background: rgba(255,255,255,0.1);
-            transition: 0.2s;
-        }
-
-        .card-actions .fa-pen:hover { color: var(--accent); }
-        .card-actions .fa-trash:hover { color: var(--danger); }
-
-        /* Formulário Modal */
         #form {
             position: fixed;
             inset: 0;
-            background: rgba(15, 23, 42, 0.9);
+            background: rgba(15, 23, 42, 0.95);
             backdrop-filter: blur(20px);
             padding: 30px;
             display: none;
@@ -159,26 +124,38 @@
             outline: none;
         }
 
-        /* Container da Imagem Final (Estilo Grid Compacto) */
+        /* Área de Impressão Oculta */
         #printArea {
             position: fixed;
-            left: -5000px;
-            background: #fff; /* Fundo branco para a imagem final */
+            left: -9999px;
+            background: white;
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
         }
 
-        .print-card {
-            width: 300px;
-            padding: 20px;
-            border: 1px solid #eee;
-            color: #333;
-            background: #fff;
-            /* Bordas removidas conforme solicitado para a imagem final */
-            border-radius: 0 !important;
+        .print-header {
+            width: 100%;
+            background-color: #7092be;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 28px;
+            font-weight: bold;
         }
-        
-        .print-card h4 { color: #166534; border-bottom: 2px solid #166534; margin-bottom: 10px; }
+
+        .print-grid { display: flex; flex-wrap: nowrap; padding: 10px; gap: 2px; }
+
+        .print-card {
+            width: 160px;
+            padding: 15px 10px;
+            font-size: 12px;
+            min-height: 450px;
+            color: black;
+            border: 1px solid #ddd;
+        }
+
+        .p-label { color: #c00000; font-weight: bold; margin-right: 4px; }
+        .p-vocal-principal { color: #0070c0; font-weight: bold; margin-top: 10px; margin-bottom: 5px; }
 
         #floating-print-btn {
             position: fixed;
@@ -189,9 +166,7 @@
             max-width: 400px;
             z-index: 3000;
             display: none;
-            padding: 20px;
             border-radius: 50px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
     </style>
 </head>
@@ -206,7 +181,7 @@
         <button class="btn-main btn-danger" onclick="alternarLixeira()"><i class="fa-solid fa-trash-can"></i>LIXEIRA</button>
     </div>
 
-    <h3 id="status" style="margin-bottom:15px; font-weight: 400; font-size: 14px; color: var(--accent);">
+    <h3 id="status" style="margin-bottom:15px; font-size: 14px; color: var(--accent);">
         <i class="fa-solid fa-layer-group"></i> ESCALAS ATIVAS
     </h3>
     <div id="lista"></div>
@@ -233,7 +208,8 @@
     </div>
 
     <input id="dia" placeholder="Dia da Semana" readonly>
-    <input id="date" placeholder="DD/MM/AAAA">
+    <input id="data" placeholder="Data (DD/MM/AAAA)">
+    <input id="ministro" placeholder="Vocal Líder (Ministro)">
 
     <div id="vocais"></div>
 
@@ -246,8 +222,8 @@
     </div>
 
     <div style="margin-top: 30px; display: flex; gap: 10px;">
-        <button class="btn-primary" style="flex: 2; flex-direction: row; height: 50px;" onclick="salvarEscala()">SALVAR</button>
-        <button class="btn-main" style="flex: 1; flex-direction: row; height: 50px;" onclick="fecharForm()">CANCELAR</button>
+        <button class="btn-primary" style="flex: 2; height: 50px;" onclick="salvarEscala()">SALVAR</button>
+        <button class="btn-main" style="flex: 1; height: 50px;" onclick="fecharForm()">CANCELAR</button>
     </div>
 </div>
 
@@ -277,7 +253,10 @@
     }
 
     function limparCampos() {
-        ['dia', 'ministro', 'guitarra', 'violao', 'baixo', 'teclado', 'bateria'].forEach(id => document.getElementById(id).value = '');
+        ['dia', 'data', 'ministro', 'guitarra', 'violao', 'baixo', 'teclado', 'bateria'].forEach(id => {
+            const el = document.getElementById(id);
+            if(el) el.value = '';
+        });
         document.getElementById('vocais').innerHTML = '';
         document.getElementById('equipes').style.display = 'none';
     }
@@ -312,6 +291,7 @@
 
         const escala = {
             dia: document.getElementById('dia').value,
+            data: document.getElementById('data').value,
             ministro: document.getElementById('ministro').value,
             vocais: vocais,
             guitarra: document.getElementById('guitarra').value,
@@ -320,6 +300,8 @@
             teclado: document.getElementById('teclado').value,
             bateria: document.getElementById('bateria').value
         };
+
+        if(!escala.dia || !escala.data) return alert("Preencha ao menos o dia e a data!");
 
         if(editIndex !== null) escalas[editIndex] = escala;
         else escalas.push(escala);
@@ -333,6 +315,7 @@
         const lista = document.getElementById('lista');
         const statusText = document.getElementById('status');
         lista.innerHTML = '';
+        
         statusText.innerHTML = mostrandoLixeira ? '<i class="fa-solid fa-trash-can"></i> LIXEIRA' : '<i class="fa-solid fa-layer-group"></i> ESCALAS ATIVAS';
         
         const dados = mostrandoLixeira ? lixeira : escalas;
@@ -351,11 +334,9 @@
                         <i class="fa-solid fa-rotate-left" onclick="event.stopPropagation(); restaurarEscala(${i})"></i>
                     `}
                 </div>
-                <h4>${e.dia}</h4>
+                <h4>${e.data || '---'} - ${e.dia}</h4>
                 <div class="info-row"><i class="fa-solid fa-microphone-lines"></i> <b>${e.ministro}</b></div>
                 <div class="info-row"><i class="fa-solid fa-users"></i> ${e.vocais.join(', ')}</div>
-                <div class="info-row"><i class="fa-solid fa-guitar"></i> ${e.guitarra} / ${e.violao}</div>
-                <div class="info-row"><i class="fa-solid fa-drum"></i> ${e.baixo} • ${e.teclado} • ${e.bateria}</div>
             `;
             lista.appendChild(card);
         });
@@ -366,15 +347,20 @@
         editIndex = i;
         abrirForm();
         definirDia(e.dia);
-        document.getElementById('ministro').value = e.ministro;
-        document.getElementById('guitarra').value = e.guitarra;
-        document.getElementById('violao').value = e.violao;
-        document.getElementById('baixo').value = e.baixo;
-        document.getElementById('teclado').value = e.teclado;
-        document.getElementById('bateria').value = e.bateria;
-        e.vocais.forEach((v, idx) => {
-            if(document.getElementById(`v${idx+1}`)) document.getElementById(`v${idx+1}`).value = v;
-        });
+        document.getElementById('data').value = e.data || '';
+        document.getElementById('ministro').value = e.ministro || '';
+        document.getElementById('guitarra').value = e.guitarra || '';
+        document.getElementById('violao').value = e.violao || '';
+        document.getElementById('baixo').value = e.baixo || '';
+        document.getElementById('teclado').value = e.teclado || '';
+        document.getElementById('bateria').value = e.bateria || '';
+        
+        setTimeout(() => {
+            e.vocais.forEach((v, idx) => {
+                const campo = document.getElementById(`v${idx+1}`);
+                if(campo) campo.value = v;
+            });
+        }, 10);
     }
 
     function excluirEscala(i){
@@ -413,48 +399,70 @@
         render();
     }
 
-    async function gerarImagem(){
-        if(selecionados.length === 0) return alert('Selecione escalas!');
-        
+    async function gerarImagem() {
+        if (selecionados.length === 0) return alert('Selecione as escalas primeiro!');
+
+        const mes = prompt("Digite o título da imagem (ex: DEZEMBRO/2025):", "ESCALA DE LOUVOR");
         const printArea = document.getElementById('printArea');
         printArea.innerHTML = '';
 
-        // Definindo layout de colunas baseado na quantidade
-        const cols = selecionados.length > 3 ? 2 : 1;
-        printArea.style.display = 'grid';
-        printArea.style.gridTemplateColumns = `repeat(${cols}, 300px)`;
+        const header = document.createElement('div');
+        header.className = 'print-header';
+        header.innerText = mes;
+        printArea.appendChild(header);
 
-        selecionados.sort().forEach(idx => {
+        const grid = document.createElement('div');
+        grid.className = 'print-grid';
+        printArea.appendChild(grid);
+
+        const cores = [
+            { bg: '#f8f9fa', text: '#000' },
+            { bg: '#ffffff', text: '#000' },
+            { bg: '#e7f1ff', text: '#000' },
+            { bg: '#f0fff4', text: '#000' }
+        ];
+
+        selecionados.forEach((idx, i) => {
             const e = escalas[idx];
-            const div = document.createElement('div');
-            div.className = 'print-card';
-            div.innerHTML = `
-                <h4>${e.dia}</h4>
-                <p><b>Ministro:</b> ${e.ministro}</p>
-                <p><b>Vocais:</b> ${e.vocais.join(', ')}</p>
-                <p><b>Banda:</b> ${e.guitarra}, ${e.violao}, ${e.baixo}, ${e.teclado}, ${e.bateria}</p>
+            const cor = cores[i % cores.length];
+            const card = document.createElement('div');
+            card.className = 'print-card';
+            card.style.backgroundColor = cor.bg;
+
+            card.innerHTML = `
+                <div style="font-weight: bold; font-size: 16px;">${e.data}</div>
+                <div style="margin-bottom: 10px; text-transform: uppercase; font-size: 11px;">${e.dia}</div>
+                
+                <div class="p-vocal-principal"><span class="p-label">Vocal Líder:</span><br>${e.ministro}</div>
+                
+                <div style="margin-bottom: 15px;">
+                    <span class="p-label">Vozes:</span><br>
+                    ${e.vocais.map(v => `<div>${v}</div>`).join('')}
+                </div>
+
+                <div style="margin-top: auto; border-top: 1px solid #eee; pt: 5px;">
+                    <div><span class="p-label">Guitarra:</span> ${e.guitarra || '-'}</div>
+                    <div><span class="p-label">Violão:</span> ${e.violao || '-'}</div>
+                    <div><span class="p-label">Baixo:</span> ${e.baixo || '-'}</div>
+                    <div><span class="p-label">Teclado:</span> ${e.teclado || '-'}</div>
+                    <div><span class="p-label">Bateria:</span> ${e.bateria || '-'}</div>
+                </div>
             `;
-            printArea.appendChild(div);
+            grid.appendChild(card);
         });
 
-        setTimeout(() => {
-            html2canvas(printArea, { scale: 3 }).then(canvas => {
-                const link = document.createElement('a');
-                link.download = `escala_louvor_${new Date().getTime()}.png`;
-                link.href = canvas.toDataURL();
-                link.click();
-                
-                // Reset
-                modoSelecao = false;
-                selecionados = [];
-                document.getElementById('floating-print-btn').style.display = 'none';
-                render();
-            });
-        }, 500);
+        await new Promise(r => setTimeout(r, 500));
+
+        html2canvas(printArea, { scale: 2 }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = `Escala_${mes}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            ativarSelecao();
+        });
     }
 
     render();
 </script>
-
 </body>
 </html>
