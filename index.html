@@ -172,32 +172,40 @@
             max-width: 500px;
         }
 
-        /* Print Design */
+        /* --- AJUSTE NA ÁREA DE IMPRESSÃO --- */
         #printArea {
             position: fixed;
             left: -9999px;
             background: #000;
-            padding: 40px;
+            padding: 50px;
+            width: 1150px; /* Largura suficiente para 5 colunas de ~210px cada + gaps */
         }
 
         .print-title {
             color: #f59e0b;
             font-family: 'Syncopate';
-            font-size: 40px;
+            font-size: 48px;
             text-align: center;
             margin-bottom: 40px;
             border-bottom: 5px solid #f59e0b;
             padding-bottom: 20px;
+            text-transform: uppercase;
         }
 
-        .print-grid { display: flex; gap: 10px; }
+        .print-grid { 
+            display: flex; 
+            flex-wrap: wrap; /* Permite quebrar linha */
+            gap: 15px; 
+            justify-content: center; /* Centraliza se houver menos de 5 na linha */
+        }
 
         .print-card {
-            width: 200px;
-            border: 2px solid #333;
+            width: 205px; /* Tamanho fixo do card */
+            border: 1px solid #333;
             background: #0a0a0a;
             color: white;
             padding: 20px;
+            margin-bottom: 5px;
         }
 
         .p-section-title {
@@ -276,7 +284,6 @@
 <div id="printArea"></div>
 
 <script>
-    /* Lógica JS mantida exatamente igual conforme solicitado */
     let escalas = JSON.parse(localStorage.getItem('escalas')) || [];
     let lixeira = JSON.parse(localStorage.getItem('lixeira')) || [];
     let selecionados = [];
@@ -457,6 +464,8 @@
         if (selecionados.length === 0) return alert('Selecione os sets primeiro!');
 
         const mes = prompt("TÍTULO DO POSTER:", "SETLIST DEZEMBRO");
+        if(mes === null) return;
+
         const printArea = document.getElementById('printArea');
         printArea.innerHTML = '';
 
@@ -469,43 +478,51 @@
         grid.className = 'print-grid';
         printArea.appendChild(grid);
 
+        // Gera os cards selecionados
         selecionados.forEach((idx) => {
             const e = escalas[idx];
             const card = document.createElement('div');
             card.className = 'print-card';
 
             card.innerHTML = `
-                <div style="font-weight: 900; font-size: 24px; color:#f59e0b;">${e.data}</div>
-                <div style="margin-bottom: 20px; text-transform: uppercase; font-size: 10px; letter-spacing:2px;">${e.dia}</div>
+                <div style="font-weight: 900; font-size: 26px; color:#f59e0b; font-family:'Syncopate'">${e.data}</div>
+                <div style="margin-bottom: 20px; text-transform: uppercase; font-size: 11px; letter-spacing:2px; font-weight: 800; color: #aaa;">${e.dia}</div>
                 
                 <div class="p-section-title">Ministro</div>
-                <div style="font-size: 14px; font-weight: bold;">${e.ministro}</div>
+                <div style="font-size: 15px; font-weight: 800; margin-bottom: 5px;">${e.ministro || '-'}</div>
                 
                 <div class="p-section-title">Backing Vocals</div>
-                <div style="font-size: 11px;">
-                    ${e.vocais.map(v => `<div>${v}</div>`).join('')}
+                <div style="font-size: 11px; line-height: 1.5;">
+                    ${e.vocais.length > 0 ? e.vocais.map(v => `<div>• ${v}</div>`).join('') : '<div>-</div>'}
                 </div>
 
                 <div class="p-section-title">Band</div>
-                <div style="font-size: 10px; border-top: 1px solid #333; padding-top: 10px;">
-                    <div>GT: ${e.guitarra || '-'}</div>
-                    <div>VL: ${e.violao || '-'}</div>
-                    <div>BX: ${e.baixo || '-'}</div>
-                    <div>TC: ${e.teclado || '-'}</div>
-                    <div>BT: ${e.bateria || '-'}</div>
+                <div style="font-size: 10px; border-top: 1px solid #333; padding-top: 10px; line-height: 1.7;">
+                    <div><b style="color:#f59e0b">GT:</b> ${e.guitarra || '-'}</div>
+                    <div><b style="color:#f59e0b">VL:</b> ${e.violao || '-'}</div>
+                    <div><b style="color:#f59e0b">BX:</b> ${e.baixo || '-'}</div>
+                    <div><b style="color:#f59e0b">TC:</b> ${e.teclado || '-'}</div>
+                    <div><b style="color:#f59e0b">BT:</b> ${e.bateria || '-'}</div>
                 </div>
             `;
             grid.appendChild(card);
         });
 
-        await new Promise(r => setTimeout(r, 500));
+        // Pequena pausa para garantir que fontes/estilos carreguem na DOM
+        await new Promise(r => setTimeout(r, 600));
 
-        html2canvas(printArea, { scale: 2, backgroundColor: '#000' }).then(canvas => {
+        // Transforma a DIV invisível em imagem PNG
+        html2canvas(printArea, { 
+            scale: 2, 
+            backgroundColor: '#000',
+            logging: false,
+            useCORS: true 
+        }).then(canvas => {
             const link = document.createElement('a');
-            link.download = `StageProtocol_${mes}.png`;
+            link.download = `Protocolo_${mes.replace(/\s+/g, '_')}.png`;
             link.href = canvas.toDataURL('image/png');
             link.click();
-            ativarSelecao();
+            ativarSelecao(); // Desativa o modo seleção após gerar
         });
     }
 
